@@ -36,6 +36,7 @@ function App() {
   const [facebook, setFacebook] = useState([]);
   const [linkedin, setLinkedin] = useState([]);
   const [email, setEmail] = useState([]);
+  const [userName, setUserName] = useState([]);
   const [total, setTotal] = useState(true);
   // const [disabledR, setDisabledR] = useState(false);
   // const [disabledL, setDisabledL] = useState(false);
@@ -48,7 +49,8 @@ function App() {
   const twit = images.map((i)=>i.twitter)
   const mail = images.map((i)=>i.email)
   const ln = images.map((i)=>i.linkedin) 
-
+const user = images.map((i)=>i.username)
+setUserName(user);
 setInstagram(insta);
 setLinkedin(ln);
 setFacebook(fb);
@@ -118,14 +120,19 @@ setPhotoIndex(b);
          <AiOutlineLeft onClick={handleLeft} id="leftIcon"  className="leftsvg"/>
          </div>
          <AiOutlineRight onClick={handleRight} className="rightsvg"/>
+         <h4 className="user_name">{userName[photoIndex]}</h4>
+
          </>
-       {/* <div className="mt-2 iconDiv">
-          <a href={instagram[photoIndex]} target = "_blank" > <AiFillInstagram className='insta'/></a>
-          <a href={email[photoIndex]} target = "_blank" > <AiFillMail href={email[photoIndex]} target = "_blank" className='insta'/> </a>
+       <div className=" iconDiv">
+         {instagram[photoIndex]==""?null:
+          <a href={instagram[photoIndex]} target = "_blank" > <AiFillInstagram className='insta'/></a>}
+          <a href={`mailto:${email[photoIndex]}`} target = "_blank" > <AiFillMail  target = "_blank" className='insta'/> </a>
           <a href={linkedin[photoIndex]} target = "_blank" > <AiFillLinkedin href={linkedin[photoIndex]} target = "_blank" className='insta'/></a>
           <a href={twitter[photoIndex]} target = "_blank" > <AiFillTwitterCircle className='insta'/></a>
           <a href={facebook[photoIndex]} target = "_blank" > <AiFillFacebook  className='insta'/> </a>
-          </div> */}
+          </div>
+          <div className ="user_name">
+          </div>
       </div>
 
       {/* Gallery view */}

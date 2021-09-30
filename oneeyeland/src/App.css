@@ -153,6 +153,7 @@ button{
 }
 .model img{
   width: auto;
+  max-height: 90%;
   max-width: 100%;
   height: auto;
   display: block;
@@ -197,11 +198,48 @@ button{
 .model.open .iconDiv{
   position: fixed;
   bottom: 10px;
-  left: 50%;
+  left: 10%;
   width: 2rem;
   height: 2rem;
   padding: 5px;
   background-color: rgba(0,0,0,0.4);
   color: #ffffff;
   cursor: pointer;
+  margin-bottom: 10px;
+}
+.user_name{
+  position: fixed;
+  bottom: 2px;
+  left: 0%;
+  width: 100%;
+  height: 2rem;
+  /* background-color: rgba(0,0,0,0.4); */
+  color: #ffffff;
+  cursor: pointer;
+  text-align: center;
+}
+@media only screen and (max-width: 600px) {
+  .model.open .iconDiv{
+    position: fixed;
+    bottom: 10px;
+    left: 43%;
+    width: 2rem;
+    height: 2rem;
+    padding: 5px;
+    background-color: rgba(0,0,0,0.4);
+    color: #ffffff;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .user_name{
+    position: fixed;
+    bottom: 7%;
+    left: 0%;
+    width: 100%;
+    height: 2rem;
+    /* background-color: rgba(0,0,0,0.4); */
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+  }
 }
