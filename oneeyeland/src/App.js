@@ -1,27 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Heading } from './components/Heading';
-import { Loader } from './components/Loader';
-import axios from 'axios';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import { Heading } from "./components/Heading";
+import { Loader } from "./components/Loader";
+import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import { AiFillInstagram,AiOutlineLeft,AiOutlineRight,AiFillMail,AiFillLinkedin,AiFillTwitterCircle,AiFillFacebook,AiOutlineClose} from "react-icons/ai";
+import {
+  AiFillInstagram,
+  AiOutlineLeft,
+  AiOutlineRight,
+  AiFillMail,
+  AiFillLinkedin,
+  AiFillTwitterCircle,
+  AiFillFacebook,
+  AiOutlineClose,
+} from "react-icons/ai";
 
-function useKey(key,cb){
-const callbackRef = useRef(cb)
-useEffect(()=>{
-  callbackRef.current = cb;
-})
-  useEffect(()=>{
-    function handle(event){
-      if(event.code===key ){
-callbackRef.current(event)
+function useKey(key, cb) {
+  const callbackRef = useRef(cb);
+  useEffect(() => {
+    callbackRef.current = cb;
+  });
+  useEffect(() => {
+    function handle(event) {
+      if (event.code === key) {
+        callbackRef.current(event);
       }
     }
-    document.addEventListener("keydown",handle)
-    return()=>document.removeEventListener("keydown",handle)
-  },[key])
+    document.addEventListener("keydown", handle);
+    return () => document.removeEventListener("keydown", handle);
+  }, [key]);
 }
 
 function App() {
@@ -41,98 +51,131 @@ function App() {
   // const [disabledR, setDisabledR] = useState(false);
   // const [disabledL, setDisabledL] = useState(false);
 
+  let history = useHistory();
 
- const handleImage =(b)=>{
-  const imageUrls = images.map((i)=>i.image_2000px)
-  const insta = images.map((i)=>i.insta)
-  const fb = images.map((i)=>i.facebook)
-  const twit = images.map((i)=>i.twitter)
-  const mail = images.map((i)=>i.email)
-  const ln = images.map((i)=>i.linkedin) 
-const user = images.map((i)=>i.username)
-setUserName(user);
-setInstagram(insta);
-setLinkedin(ln);
-setFacebook(fb);
-setTwitter(twit);
-setEmail(mail);
-  setImageUrl(imageUrls);
-   setIsOpen(true)
-   setModalShow(true)
-setPhotoIndex(b);
- }
+  const handleClick=(id)=> {
+    console.log('handle',history)
+    history.push({
+      pathname: '/',
+      search: `?imageId=${id}`
+    })
+    // history.push("/home");
+  }
+
+  const handleImage = (b) => {
+    const imageUrls = images.map((i) => i.image_2000px);
+    const insta = images.map((i) => i.insta);
+    const fb = images.map((i) => i.facebook);
+    const twit = images.map((i) => i.twitter);
+    const mail = images.map((i) => i.email);
+    const ln = images.map((i) => i.linkedin);
+    const user = images.map((i) => i.username);
+    setUserName(user);
+    setInstagram(insta);
+    setLinkedin(ln);
+    setFacebook(fb);
+    setTwitter(twit);
+    setEmail(mail);
+    setImageUrl(imageUrls);
+    setIsOpen(true);
+    setModalShow(true);
+    setPhotoIndex(b);
+    handleClick(b)
+  };
 
   useEffect(() => {
     fetchImages(counts);
-    document.getElementById('#leftIcon')
-  }, [])
+    document.getElementById("#leftIcon");
+  }, []);
 
-  useKey('ArrowLeft',handleLeft);
-  useKey('ArrowRight',handleRight);
-  useKey('Escape',handleClose);
+  useKey("ArrowLeft", handleLeft);
+  useKey("ArrowRight", handleRight);
+  useKey("Escape", handleClose);
 
-  function handleClose (){
-    setIsOpen(false)
+  function handleClose() {
+    setIsOpen(false);
   }
 
-  function handleLeft(){
+  function handleLeft() {
     setPhotoIndex((photoIndex + imageUrl.length - 1) % imageUrl.length);
- 
+    handleClick((photoIndex + imageUrl.length - 1) % imageUrl.length)
   }
-  function handleRight (){
-    setPhotoIndex( (photoIndex + 1) % imageUrl.length);
-  }
-
-  const fetchImages = (count=10) => {
-   setCounts( counts + 10);
-   apiCall(counts);
+  function handleRight() {
+    setPhotoIndex((photoIndex + 1) % imageUrl.length);
+    handleClick((photoIndex + 1) % imageUrl.length)
   }
 
-  const apiCall =(a)=>{
-    console.log(a)
-    const api = "https://ap-south-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-cmkjd/service/oneeyeland/incoming_webhook/gallary";
-    const params = {"start":a,"length":10};
+  const fetchImages = (count = 10) => {
+    setCounts(counts + 10);
+    apiCall(counts);
+  };
 
-    
-    axios.post(api, params)
-      .then(res => {
-        setImage([...images, ...res.data.images]);
-        if(counts<res.data.total_count)
-        {
-         setTotal(true)
-        }
-        else{
-          setTotal(false)
+  const apiCall = (a) => {
+    console.log(a);
+    const api =
+      "https://ap-south-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-cmkjd/service/oneeyeland/incoming_webhook/gallary";
+    const params = { start: a, length: 10 };
 
-        }
-      })
-  }
-  
+    axios.post(api, params).then((res) => {
+      setImage([...images, ...res.data.images]);
+      if (counts < res.data.total_count) {
+        setTotal(true);
+      } else {
+        setTotal(false);
+      }
+    });
+  };
+
   return (
     <div>
       <Heading />
       <div className={isOpen ? "model open" : "model"}>
-      {/* <input onKeyDown={ handleKeyDown }/> */}
+        {/* <input onKeyDown={ handleKeyDown }/> */}
         <>
-       <img src={imageUrl[photoIndex]}/>
-         <AiOutlineClose onClick={()=>setIsOpen(false)} className="closesvg"/>
-         <div>
-         <AiOutlineLeft onClick={handleLeft} id="leftIcon"  className="leftsvg"/>
-         </div>
-         <AiOutlineRight onClick={handleRight} className="rightsvg"/>
-         <h4 className="user_name">{userName[photoIndex]}</h4>
-
-         </>
-       <div className=" iconDiv">
-         {instagram[photoIndex]==""?null:
-          <a href={instagram[photoIndex]} target = "_blank" > <AiFillInstagram className='insta'/></a>}
-          <a href={`mailto:${email[photoIndex]}`} target = "_blank" > <AiFillMail  target = "_blank" className='insta'/> </a>
-          <a href={linkedin[photoIndex]} target = "_blank" > <AiFillLinkedin href={linkedin[photoIndex]} target = "_blank" className='insta'/></a>
-          <a href={twitter[photoIndex]} target = "_blank" > <AiFillTwitterCircle className='insta'/></a>
-          <a href={facebook[photoIndex]} target = "_blank" > <AiFillFacebook  className='insta'/> </a>
+          <img src={imageUrl[photoIndex]} />
+          <AiOutlineClose
+            onClick={() => setIsOpen(false)}
+            className="closesvg"
+          />
+          <div>
+            <AiOutlineLeft
+              onClick={handleLeft}
+              id="leftIcon"
+              className="leftsvg"
+            />
           </div>
-          <div className ="user_name">
-          </div>
+          <AiOutlineRight onClick={handleRight} className="rightsvg" />
+          <h4 className="user_name">{userName[photoIndex]}</h4>
+        </>
+        <div className=" iconDiv">
+          {instagram[photoIndex] == "" ? null : (
+            <a href={instagram[photoIndex]} target="_blank">
+              {" "}
+              <AiFillInstagram className="insta" />
+            </a>
+          )}
+          <a href={`mailto:${email[photoIndex]}`} target="_blank">
+            {" "}
+            <AiFillMail target="_blank" className="insta" />{" "}
+          </a>
+          <a href={linkedin[photoIndex]} target="_blank">
+            {" "}
+            <AiFillLinkedin
+              href={linkedin[photoIndex]}
+              target="_blank"
+              className="insta"
+            />
+          </a>
+          <a href={twitter[photoIndex]} target="_blank">
+            {" "}
+            <AiFillTwitterCircle className="insta" />
+          </a>
+          <a href={facebook[photoIndex]} target="_blank">
+            {" "}
+            <AiFillFacebook className="insta" />{" "}
+          </a>
+        </div>
+        <div className="user_name"></div>
       </div>
 
       {/* Gallery view */}
@@ -140,17 +183,21 @@ setPhotoIndex(b);
         dataLength={images.length}
         next={fetchImages}
         hasMore={true}
-        loader={total?<Loader />:''}
+        loader={total ? <Loader /> : ""}
       >
-        <div className='wrapperImage'>
-          
-          {images.map((image,index) => (
-            <img className="imgcls" src={image.image_200px} key={index} 
-            onClick={()=>{handleImage(index)}}
-             />
+        <div className="wrapperImage">
+          {images.map((image, index) => (
+            <img
+              className="imgcls"
+              src={image.image_200px}
+              key={index}
+              onClick={() => {
+                handleImage(index);
+              }}
+            />
           ))}
         </div>
-        </InfiniteScroll>
+      </InfiniteScroll>
     </div>
   );
 }
